@@ -6,6 +6,13 @@ import cookielib
 import re
 from bs4 import BeautifulSoup
 
+#函数列表：
+# getopener()获取表单信息与储存有cookies等的openner;
+# getTable(a,y="")获取网页内容
+#getStuinfo(bs1)提取学生信息
+#getClasses(bs1)获取班级信息
+#getTimetable(bs1)获取课程表
+
 def getopener():
 	"此函数用于获取保存了cookies的opener与表单数据"
 	cookies=cookielib.MozillaCookieJar()
@@ -20,7 +27,7 @@ def getopener():
             exit()
         return opener,ans,bs1
 
-def getTable(a):
+def getTable(a,y=""):
 	"此函数用于获取网页内容"
 	opener,response,bs1=getopener()
 	'处理表单数据'
@@ -30,23 +37,26 @@ def getTable(a):
 		datas[i.attrs['name']]=i.attrs['value'].encode('utf-8')
 	datas['queryStudentId']=a
 	'处理表单中的select'
-	for m in bs1.findAll('select'):
-	    print "输入学年选择:"
-	    codec=0
-	    l=[]
-	    for n in m.findAll('option'):
-		    print "%d.=>%s  "%(codec,n.text),
-		    l.append(n.string)
-		    codec=codec+1
-	    choice=int(raw_input("\n输入你选择的序号:"))
-	    datas[m.attrs['name']]=l[choice]
+        if y=="":
+	    for m in bs1.findAll('select'):
+	        print "输入学年选择:"
+	        codec=0
+	        l=[]
+	        for n in m.findAll('option'):
+		        print "%d.=>%s  "%(codec,n.text),
+		        l.append(n.string)
+		        codec=codec+1
+	        choice=int(raw_input("\n输入你选择的序号:"))
+	        datas[m.attrs['name']]=l[choice]
+        else:
+            datas['queryAcademicYear']=y
+            print datas
 	request=urllib2.Request("http://xk.urp.seu.edu.cn/jw_service/service/stuCurriculum.action",data=urllib.urlencode(datas))
 	request.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.8.1.14) Gecko/20080404 (FoxPlus) Firefox/2.0.0.14')
 	bs1=BeautifulSoup(opener.open(request).read(),'lxml')
 	content=bs1.prettify().encode("utf-8")
 	if "没有找到" in content:
-		print "查询失败"
-		exit()
+		return None
 	return bs1
 
 def getStuinfo(bs1):
@@ -103,7 +113,7 @@ def getTimetable(bs1):
 	i=0
 	for  m in tb.select('.line_topleft'):
 		dealed=m.get_text(separator="\t",strip=True)
-		match=re.match(ur'(\S*?)\t\[(\d)+\-(\d+)周\](\d+)\-(\d+)节\t*(\S*)',dealed)
+		match=re.match(ur'(\S*?)\t\[(\d)+\-(\d+)周\](\d+)\-(\d+)节\t*(\S*)',dealed)                                                         #匹配课程信息
 		if match is not None:
                         timetable[i]=re.findall(ur'(\S*?)\t\[(\d)+\-(\d+)周\](\d+)\-(\d+)节\t*(\S*)',dealed)
 		else:
@@ -117,6 +127,9 @@ def getTimetable(bs1):
 def main():
 	a=str(raw_input('输入您的学号：'))
 	bs1=getTable(a)
+        if bs1 is None:
+            print "查询失败!"
+            exit()
 	stuinfo=getStuinfo(bs1)
 	classes,total=getClasses(bs1)
 	timetable=getTimetable(bs1)

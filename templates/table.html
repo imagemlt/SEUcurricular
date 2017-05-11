@@ -1,0 +1,134 @@
+$def with (timetable,stuinfo,total,classes)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>课程表</title>
+    <!-- Bootstrap -->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+	<style>
+		.info{display:block;width:100%;background-color:antiquewhite}
+		.classinfo{display:block;width:100%;background-color:aquamarine}
+		body{background:url(/static/test-back.jpg);background-repeat: no-repeat;background-size:cover;}
+		div .col-md-2{padding:0;}
+		.head-div{display:block;border:1px solid #0EF578;width:100%;}
+		.Classtable{padding-left:auto;padding-right:auto;}
+		.column{width:19.5%;margin-right:2px;min-height:1000px;float:left;margin-left:auto;display:table}
+		.percla{border:1px solid #FFFFFF;border-radius:8px;width:100%;padding:0 auto;border:1px solid #000000; min-height:125px;height:125px;margin-bottom:3px;display:table-cell;overflow:hidden}
+		.Percontent{width:70%;;margin-left:auto;margin-right:auto;margin-top:auto;position:relative;top:50%;margin-top:-40px;text-align:center;}
+		.SatSun{float:left;padding-left:0px;width:90%;height:125px;border-radius:8px;margin-top:3px}
+	</style>
+		<body>
+  <div class="container" style="padding-top:30px">
+  	<div class="row">
+  		<div class="col-md-4  visible-md visible-lg">
+			<h4 class="info">个人信息</h4>
+			<div class="stuinfo">
+			$for i in stuinfo:
+				<span class="stuinfo"><p>$i:$stuinfo[i]</p></span>
+			</div>
+			<h4 class="info">选课信息</h4>
+			$for m in classes:
+				<div class="classinfo">
+				$for n in m:
+					<span><p>$n:$m[n]</p></span>					
+				</div>
+				
+			<div class="classinfo"><span>总学分:$total</span></div>
+			
+		</div>
+  		
+  		<div class="col-md-8 col-xs-12 Classtable">
+			<div class="column">
+				<div class="head-div text-center"><h4>星期一</h4></div>
+				$for i in timetable[8]+timetable[19]+timetable[30]:
+				<div class="percla text-center" style="height:$((int(i[4])-int(i[3])+1)*62.5)px;width:100%;position:absolute;margin-top:$((int(i[3])-1)*62.5)px;"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+				
+			</div>
+			<div class="column">
+			<div class="head-div text-center"><h4>星期二</h4></div>
+			
+				
+				
+				$for i in timetable[9]+timetable[20]+timetable[31]:
+				<div class="percla text-center" style="height:$((int(i[4])-int(i[3])+1)*62.5)px;width:100%;position:absolute;margin-top:$((int(i[3])-1)*62.5)px;"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+			</div>
+			<div class="column">
+			<div class="head-div text-center"><h4>星期三</h4></div>
+			
+				
+				$for i in timetable[10]+timetable[21]+timetable[32]:
+
+				<div class="percla text-center" style="height:$((int(i[4])-int(i[3])+1)*62.5)px;width:100%;position:absolute;margin-top:$((int(i[3])-1)*62.5)px;"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+				
+			</div>
+			<div class="column">
+			<div class="head-div text-center"><h4>星期四</h4></div>
+			
+				
+				$for i in timetable[11]+timetable[22]+timetable[33]:
+				<div class="percla text-center" style="height:$((int(i[4])-int(i[3])+1)*62.5)px;width:100%;position:absolute;margin-top:$((int(i[3])-1)*62.5)px;"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+				
+				
+			</div>
+			<div class="column">
+			<div class="head-div text-center"><h4>星期五</h4></div>
+			
+				
+				$for i in timetable[12]+timetable[23]+timetable[34]:
+				<div class="percla text-center" style="height:$((int(i[4])-int(i[3])+1)*62.5)px;width:100%;position:absolute;margin-top:$((int(i[3])-1)*62.5)px;"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+				
+				
+			</div>
+			<div class="SatSun col-xs-12">
+				<div class="col-xs-1" style="float:left;margin-left:0px;border:1px solid green;writing-mode:lr-tb;width:15px;height:100%;padding-left:0px">星期六</div>
+				<div class="col-xs-11">
+				$for i in timetable[37]:
+					$if  isinstance(i, list):
+						<div class="percla text-center" style="height:100%;width:100%;float:left"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+					$else:
+						<div class="percla text-center" style="height:100%;width:100%;float:left"><div class="Percontent">$i</div></div>
+						
+				</div>
+			</div>
+
+			<div class="SatSun col-xs-12">
+				<div class="col-xs-1" style="float:left;margin-left:0px;border:1px solid green;width:15px;height:100%;padding-left:0px;">星期日</div>
+
+				<div class="col-xs-11">
+				$for i in timetable[39]:
+					$if  isinstance(i, list):
+						<div class="percla text-center" style="height:100%;width:100%;float:left"><div class="Percontent">$i[0]<br>$i[5]<br>$i[3]-$i[4]节</div></div>
+					$else:
+						<div class="percla text-center" style="height:100%;width:100%;float:left"><div class="Percontent">$i</div></div>
+						
+				</div>
+			</div>
+			</div>
+  	</div>
+  </div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+
+
+
+	<script>
+		 
+	function chColor(){jQuery(".percla,.classinfo,.stuinfo,.SatSun").each(function(){a=(~~(Math.random()*(1<<24)));jQuery(this).css({"background-color":"#"+a.toString(16),"color":"#"+(256*256*256-a).toString(16)});});}
+	chColor();
+	function Adjust(){jQuery(".percla").width(jQuery(".column").width());console.log("resize");if(jQuery(window).innerWidth()<450){console.log("adjust");jQuery(".column").css({"margin-right":"0px"});jQuery(".percla").css({"font-size":"10px"});jQuery(".Percontent").css({"margin-top":"-30px"})}else{jQuery(".column").css({"margin-right":"2px"});jQuery(".percla").css({"font-size":"14px"});jQuery(".Percontent").css({"margin-top":"-40px"})}}
+	  setInterval("chColor()",1000);
+	function LoadTable(){
+		for(var i=0;i<13;i++){
+				jQuery(".column").append("<div class=\"divide\"  style=\"height:62.5px;float:top;width:100%;outline:0.5px solid green;border-top:0px\"><\/div>");
+			};
+		
+	}
+	jQuery(document).ready(function(){LoadTable();Adjust();});
+	  jQuery(window).resize(function(){Adjust()});
+		jQuery(".close_dialog").click(function(){jQuery(".dialog").css({"z-index":-1,"visibility":"hidden"})});
+	  </script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+  </body>
+</html>
